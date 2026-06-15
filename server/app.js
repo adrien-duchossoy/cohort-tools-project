@@ -5,7 +5,7 @@ const PORT = 5005;
 
 
 // setup CORS
-const cors = require("cors");
+// const cors = require("cors");
 
 // STATIC DATA
 // Devs Team - Import the provided files with JSON data of students and cohorts here:
@@ -26,6 +26,7 @@ const app = express();
 
 // Use the CORS middleware with options to allow requests
 // from specific IP addresses and domains.
+/*
 app.use(
   cors({
     origin: [
@@ -34,7 +35,7 @@ app.use(
     ], // Add the URLs of allowed origins to this array
   })
 );
-
+*/
 
 
 app.use(express.json());
