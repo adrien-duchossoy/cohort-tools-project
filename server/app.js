@@ -67,7 +67,15 @@ app.get("/api/cohorts", (req, res) => {
 
 
 app.get("/api/students", (req, res) => {
-  res.sendFile(__dirname + "/data/students.json");
+  Student.find({})
+    .then((students)=> {
+      console.log("Retrieved students", students)
+      res.json(students)
+    })
+    .catch((error) => {
+      console.error("Error with students:", error)
+      res.status(500).json({error: "Failed to retrieve students"})
+    })
 }); 
 
 
