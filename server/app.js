@@ -130,8 +130,10 @@ app.delete("/api/cohorts/:cohortId", async (req, res) => {
 
 
 //STUDENTS 
+
+//Get all students
 app.get("/api/students", (req, res) => {
-  Student.find({})
+  Student.find({}).populate("cohort")
     .then((students) => {
       console.log("Retrieved students", students)
       res.json(students)
@@ -142,8 +144,9 @@ app.get("/api/students", (req, res) => {
     })
 });
 
+//Get student of a specific cohort id
 app.get("/api/students/cohort/:cohortId", (req, res) => {
-  Student.find({ cohort: req.params.cohortId })
+  Student.find({ cohort: req.params.cohortId }).populate("cohort")
     .then((students) => {
       console.log("Retrieved student for cohort", students)
       res.json(students)
@@ -154,8 +157,10 @@ app.get("/api/students/cohort/:cohortId", (req, res) => {
     })
 })
 
+
+//GET student by id
 app.get("/api/students/:studentId", (req, res) => {
-  Student.findById({ _id: req.params.studentId })
+  Student.findById({ _id: req.params.studentId }).populate("cohort")
     .then((students) => {
       console.log("Retrieved students", students)
       res.json(students)
@@ -166,6 +171,8 @@ app.get("/api/students/:studentId", (req, res) => {
     })
 });
 
+
+//CREATE a new student
 app.post("/api/students", (req, res) => {
   Student.create(req.body)
     .then(() => {
@@ -177,6 +184,8 @@ app.post("/api/students", (req, res) => {
     })
 })
 
+
+//Delete a student
 app.delete("/api/students/:studentId", (req, res) => {
   Student.findByIdAndDelete(req.params.studentId)
     .then((students) => {
