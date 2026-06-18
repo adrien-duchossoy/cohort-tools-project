@@ -54,45 +54,44 @@ app.get("/docs", (req, res) => {
 
 
 // returns all the cohorts in JSON format
-app.get("/api/cohorts", async (req, res) => {
+app.get("/api/cohorts", async (req, res, next) => {
   try {
     const cohorts = await Cohort.find();
     res.json(cohorts);
   } catch (err) {
-    console.error("Error getting cohorts:", err);
-    res.status(500).json({ message: "Error getting cohorts" });
+    next(err);
   }
 });
 
-// Creates a new cohort
-app.post("/api/cohorts", async (req, res) => {
+// Creates a new cohort 
+app.post("/api/cohorts", async (req, res, next) => {
   try {
     const createdCohort = await Cohort.create(req.body);
     res.status(201).json(createdCohort);
   } catch (err) {
-    console.error("Error creating cohort:", err);
-    res.status(500).json({ message: "Error creating cohort" });
+    next(err);
   }
 });
 
-// Returns the specified cohort by id
-app.get("/api/cohorts/:cohortId", async (req, res) => {
+// Returns the specified cohort by id 
+app.get("/api/cohorts/:cohortId", async (req, res, next) => {
   try {
     const cohort = await Cohort.findById(req.params.cohortId);
 
     if (!cohort) {
-      return res.status(404).json({ message: "Cohort not found" });
+      const error = new Error("Cohort not found");
+      error.status = 404;
+      return next(error);
     }
 
     res.json(cohort);
   } catch (err) {
-    console.error("Error getting cohort:", err);
-    res.status(500).json({ message: "Error getting cohort" });
+    next(err);
   }
 });
 
 // Updates the specified cohort by id
-app.put("/api/cohorts/:cohortId", async (req, res) => {
+app.put("/api/cohorts/:cohortId", async (req, res, next) => {
   try {
     const updatedCohort = await Cohort.findByIdAndUpdate(
       req.params.cohortId,
@@ -101,33 +100,33 @@ app.put("/api/cohorts/:cohortId", async (req, res) => {
     );
 
     if (!updatedCohort) {
-      return res.status(404).json({ message: "Cohort not found" });
+      const error = new Error("Cohort not found");
+      error.status = 404;
+      return next(error);
     }
 
     res.json(updatedCohort);
   } catch (err) {
-    console.error("Error updating cohort:", err);
-    res.status(500).json({ message: "Error updating cohort" });
+    next(err);
   }
 });
 
 // Deletes the specified cohort by id
-app.delete("/api/cohorts/:cohortId", async (req, res) => {
+app.delete("/api/cohorts/:cohortId", async (req, res, next) => {
   try {
     const deletedCohort = await Cohort.findByIdAndDelete(req.params.cohortId);
 
     if (!deletedCohort) {
-      return res.status(404).json({ message: "Cohort not found" });
+      const error = new Error("Cohort not found");
+      error.status = 404;
+      return next(error);
     }
 
     res.json({ message: "Cohort deleted successfully" });
   } catch (err) {
-    console.error("Error deleting cohort:", err);
-    res.status(500).json({ message: "Error deleting cohort" });
+    next(err);
   }
 });
-
-
 
 //STUDENTS 
 
@@ -197,6 +196,24 @@ app.delete("/api/students/:studentId", (req, res) => {
       res.json(error)
     })
 })
+
+
+// ERROR HANDLING
+app.use((err, req, res, next) => {
+  console.error(err);
+
+  let statusCode = err.status || 500;
+  let message = err.message || "Internal server error";
+
+  if (err.name === "ValidationError") {
+    statusCode = 400;
+    message = "Validation error";
+  }
+
+  if (err.name === "CastError") {
+    statusCode = 400;
+    message = "Invalid id format";
+  }
 
 
 // START SERVER
