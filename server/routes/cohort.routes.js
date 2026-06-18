@@ -1,11 +1,12 @@
 const express = require("express")
 const router = express.Router()
+const Cohort = require("../models/Cohort.model")
 
 // returns all the cohorts in JSON format
 
 //CRUD operations
 
-router.get("/api/cohorts", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const cohorts = await Cohort.find();
     res.json(cohorts);
@@ -18,11 +19,12 @@ router.get("/api/cohorts", async (req, res) => {
 
 
 // Creates a new cohort
-router.post("/api/cohorts", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const createdCohort = {
       inProgress: req.body.inProgress,
       cohortSlug: req.body.cohortSlug,
+      cohortName: req.body.cohortName,
       program: req.body.program,
       campus: req.body.campus,
       startDate: req.body.startDate,
@@ -42,7 +44,7 @@ router.post("/api/cohorts", async (req, res) => {
 });
 
 // Returns the specified cohort by id
-router.get("/api/cohorts/:cohortId", async (req, res) => {
+router.get("/:cohortId", async (req, res) => {
   try {
     const cohort = await Cohort.findById(req.params.cohortId);
 
@@ -58,7 +60,7 @@ router.get("/api/cohorts/:cohortId", async (req, res) => {
 });
 
 // Updates the specified cohort by id
-router.put("/api/cohorts/:cohortId", async (req, res) => {
+router.put("/:cohortId", async (req, res) => {
   try {
     const updatedCohort = await Cohort.findByIdAndUpdate(
       req.params.cohortId,
@@ -78,7 +80,7 @@ router.put("/api/cohorts/:cohortId", async (req, res) => {
 });
 
 // Deletes the specified cohort by id
-router.delete("/api/cohorts/:cohortId", async (req, res) => {
+router.delete("/:cohortId", async (req, res) => {
   try {
     const deletedCohort = await Cohort.findByIdAndDelete(req.params.cohortId);
 

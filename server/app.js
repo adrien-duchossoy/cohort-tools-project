@@ -23,7 +23,7 @@ app.get("/docs", (req, res) => {
 
 
 const router = require("./routes/index.routes")
-app.use("/", router)
+app.use("/api", router)
 
 
 // ERROR HANDLING

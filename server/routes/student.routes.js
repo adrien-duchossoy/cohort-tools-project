@@ -60,6 +60,18 @@ router.post("/", (req, res) => {
     });
 });
 
+//Update a student
+router.put("/:studentId", (req, res) => {
+  Student.findByIdAndUpdate(req.params.studentId, req.body, { new: true })
+    .then((student) => {
+      res.json(student);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(400).json(error);
+    });
+});
+
 //Delete a student
 router.delete("/:studentId", (req, res) => {
   Student.findByIdAndDelete(req.params.studentId)
