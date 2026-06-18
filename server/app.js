@@ -214,7 +214,7 @@ app.use((err, req, res, next) => {
     statusCode = 400;
     message = "Invalid id format";
   }
-
+});
 
 // START SERVER
 app.listen(PORT, () => {
