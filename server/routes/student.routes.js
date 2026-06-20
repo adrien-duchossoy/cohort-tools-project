@@ -5,7 +5,7 @@ const Student = require("../models/Student.model")
 //STUDENTS
 
 //Get all students
-router.get("/", (req, res) => {
+router.get("/", (req, res, next) => {
   Student.find({})
     .populate("cohort")
     .then((students) => {
@@ -14,12 +14,13 @@ router.get("/", (req, res) => {
     })
     .catch((error) => {
       console.error("Error with students:", error);
-      res.status(500).json({ error: "Failed to retrieve students" });
+      /* res.status(500).json({ error: "Failed to retrieve students" }); */
+      next(err);
     });
 });
 
 //Get student of a specific cohort id
-router.get("/cohort/:cohortId", (req, res) => {
+router.get("/cohort/:cohortId", (req, res, next) => {
   Student.find({ cohort: req.params.cohortId })
     .populate("cohort")
     .then((students) => {
@@ -28,9 +29,12 @@ router.get("/cohort/:cohortId", (req, res) => {
     })
     .catch((error) => {
       console.error("Error retrieving students from cohort", error);
+      /*
       res
         .status(500)
-        .json({ error: "Failed to retrieve students from cohort" });
+        .json({ error: "Failed to retrieve students from cohort" });  
+      */  
+      next(error);
     });
 });
 

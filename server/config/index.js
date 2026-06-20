@@ -1,5 +1,5 @@
 const express = require("express");
-const morgan = require("morgan");
+const logger = require("morgan");
 const cors = require("cors");
 
 
@@ -16,6 +16,9 @@ function config(app) {
   // Use the CORS middleware with options to allow requests
   // from specific IP addresses and domains.
 
+  // ℹ️ Enables Express to trust reverse proxies (e.g., when deployed behind services like Heroku or Vercel)
+  app.set("trust proxy", 1);
+
   app.use(
     cors({
       origin: process.env.ORIGIN,
@@ -23,7 +26,7 @@ function config(app) {
   );
 
   app.use(express.json());
-  app.use(morgan("dev"));
+  app.use(logger("dev"));
   app.use(express.static("public"));
   app.use(express.urlencoded({ extended: false }));
 }

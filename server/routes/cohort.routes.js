@@ -6,20 +6,21 @@ const Cohort = require("../models/Cohort.model")
 
 //CRUD operations
 
-router.get("/", async (req, res) => {
+router.get("/", async (req, res, next) => {
   try {
     const cohorts = await Cohort.find();
     res.json(cohorts);
   } catch (err) {
-    console.error("Error getting cohorts:", err);
-    res.status(500).json({ message: "Error getting cohorts" });
+    console.error("Error getting cohorts info:", err);
+    /* res.status(500).json({ message: "Error getting cohorts info" }); */
+    next(err);
   }
 });
 
 
 
 // Creates a new cohort
-router.post("/", async (req, res) => {
+router.post("/", async (req, res, next) => {
   try {
     const createdCohort = {
       inProgress: req.body.inProgress,
@@ -39,12 +40,13 @@ router.post("/", async (req, res) => {
     res.status(201).json(createdCohort);
   } catch (err) {
     console.error("Error creating cohort:", err);
-    res.status(500).json({ message: "Error creating cohort" });
+    /* res.status(500).json({ message: "Error creating cohort" });*/
+    next(err);
   }
 });
 
 // Returns the specified cohort by id
-router.get("/:cohortId", async (req, res) => {
+router.get("/:cohortId", async (req, res, next) => {
   try {
     const cohort = await Cohort.findById(req.params.cohortId);
 
@@ -55,12 +57,13 @@ router.get("/:cohortId", async (req, res) => {
     res.json(cohort);
   } catch (err) {
     console.error("Error getting cohort:", err);
-    res.status(500).json({ message: "Error getting cohort" });
+    /* res.status(500).json({ message: "Error getting cohort" }); */
+    next(err);
   }
 });
 
 // Updates the specified cohort by id
-router.put("/:cohortId", async (req, res) => {
+router.put("/:cohortId", async (req, res, next) => {
   try {
     const updatedCohort = await Cohort.findByIdAndUpdate(
       req.params.cohortId,
@@ -75,12 +78,13 @@ router.put("/:cohortId", async (req, res) => {
     res.json(updatedCohort);
   } catch (err) {
     console.error("Error updating cohort:", err);
-    res.status(500).json({ message: "Error updating cohort" });
+    /* res.status(500).json({ message: "Error updating cohort" }); */
+    next(err);
   }
 });
 
 // Deletes the specified cohort by id
-router.delete("/:cohortId", async (req, res) => {
+router.delete("/:cohortId", async (req, res, next) => {
   try {
     const deletedCohort = await Cohort.findByIdAndDelete(req.params.cohortId);
 
@@ -91,7 +95,8 @@ router.delete("/:cohortId", async (req, res) => {
     res.json({ message: "Cohort deleted successfully" });
   } catch (err) {
     console.error("Error deleting cohort:", err);
-    res.status(500).json({ message: "Error deleting cohort" });
+    /* res.status(500).json({ message: "Error deleting cohort" }); */
+    next(err);
   }
 });
 
